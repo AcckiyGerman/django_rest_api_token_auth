@@ -72,12 +72,14 @@ class UsersAuthTests(APITestCase):
     def test_protected_returns_proper_error_for_non_auth_users(self):
         response = self.client.get('/users/protected/')
         self.assertEqual(response.status_code, 401)
-        self.assertTrue(response.data['error'])
+        self.assertEqual(response.data["detail"], "Authentication credentials were not provided.")
 
     def test_protected_for_auth_users(self):
+        User.objects.create_user(username=username, password=password)
         # Include an appropriate `Authorization:` header on all requests.
         token = Token.objects.get(user__username=username)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         response = self.client.get('/users/protected/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data['message'])
+        self.assertEqual(response.data['username'], username)
