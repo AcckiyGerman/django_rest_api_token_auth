@@ -20,7 +20,7 @@ class UsersAuthTests(APITestCase):
             format='json'
         )
         self.assertEqual(response.data['status'], 'success')
-        self.assertTrue(response.data.get['token'])
+        self.assertTrue(response.data['token'])
         self.assertTrue(User.objects.get_by_natural_key(username=username))
 
     def login(self):
