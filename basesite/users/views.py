@@ -16,14 +16,14 @@ def register(request):
         username = request.data['username']
         password = request.data['password']
     except KeyError:
-        Response({
+        return Response({
             'error': 'you need to provide a username and password fields in the request'
         }, status=400)
 
     # check that user does not exists
     try:
         User.objects.get_by_natural_key(username=username)
-        Response({'error': 'this username is already taken.'})
+        return Response({'error': 'this username is already taken.'})
     except User.DoesNotExist:
         # create an user
         user = User.objects.create_user(username=username, password=password)
@@ -34,7 +34,22 @@ def register(request):
 
 @api_view(['POST'])
 def login(request):
-    return Response(request.data)
+    try:
+        username = request.data['username']
+        password = request.data['password']
+    except KeyError:
+        Response({
+            'error': 'you need to provide a username and password fields in the request'
+        }, status=400)
+
+    try:
+        user = User.objects.get_by_natural_key(username=username)
+    except User.DoesNotExist:
+        return Response({'error': 'No such user'})
+
+    if user.check_password(password):
+        return Response({'token': user.auth_token.key, 'status': 'success'})
+    return Response({'error': 'invalid credentials'})
 
 
 @api_view(['GET'])
