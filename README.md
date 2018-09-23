@@ -1,4 +1,4 @@
-# django rest api with token auth
+# Django REST API with Token authorization template.
 
 This is a template django API application which uses token-based authorization.
 
@@ -6,10 +6,12 @@ This is a template django API application which uses token-based authorization.
 
 ## create virtual environment
 
-**either by python utility (sudo apt install python3-venv):**
+either by python utility (sudo apt install python3-venv):
+
 `python3 -m venv venv`
 
-**or you can use virtualenv (sudo apt install virtualenv):**
+or you can use virtualenv (sudo apt install virtualenv):
+
 `virtualenv venv`
 
 ## load environment
