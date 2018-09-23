@@ -8,7 +8,31 @@ from rest_framework.authentication import TokenAuthentication
 # Create your views here.
 @api_view(['GET'])
 def index(request):
-    return Response({'info': "this is an users auth app"})
+    return Response({
+        'info': "This is an authorization API. "
+                "You can register new user or login to get a security token. "
+                "Token is used to get protected resources.",
+        'endpoints': {
+            'users/register/': {
+                'info': 'Used to register a new user. Use POST request.',
+                'sample json request': {'username': 'some_user', 'password': 'his_password'},
+                'sample json response': {
+                    "token": "ff03abd808408d9b3d15ac803960b2da7fea7770",
+                    "status": "success"
+                }
+            },
+            'users/login/': {
+                'info': 'Login with login/pass to get the token. Use POST request.',
+                'sample json request': {'username': 'some_user', 'password': 'his_password'},
+                'sample json response': {
+                    "token": "ff03abd808408d9b3d15ac803960b2da7fea7770",
+                    "status": "success"
+                }
+            },
+            'users/protected/': 'To get the protected info you should set'
+                                " 'Authorization: Token ~your_token~' in HEADERS of your GET request."
+        }
+    })
 
 
 @api_view(['POST'])
@@ -59,6 +83,7 @@ def login(request):
 @permission_classes((IsAuthenticated,))
 def protected(request):
     return Response({
-        'message': 'that is protected view',
+        'message': 'Congratulations: this is a protected information,'
+                   ' that means you set your secure token correctly!',
         'username': request.user.username
     })
